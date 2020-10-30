@@ -72,7 +72,7 @@ function [clusters, clusterCenters] = kMeansClustering(dataSet,numClusters,numIt
         
         
         for i = 1:numClusters
-            avg = mean(splitSet{i});
+            avg = mean(splitSet{i},1);
             avgPoints(i,:) = avg(1:dataDim);
         end
     end
