@@ -6,7 +6,8 @@ function [clusters, clusterCenters] = kMeansClustering(dataSet,numClusters,numIt
     % clusters{1} will yield the first cluster of data). Output 
     % 'clusterCenters' contains the average values of each of the clusters 
     % (e.g. clusterCenters(1,:) corresponds to the average point of all 
-    % data points in cluters{1}).
+    % data points in cluters{1}). Each centroid is initialized to a random
+    % member of dataSet (no repeats).
     %
     % See example below for demonstration.
     %
@@ -51,8 +52,16 @@ function [clusters, clusterCenters] = kMeansClustering(dataSet,numClusters,numIt
         avgPoints(:,j) = avgPoints(:,j)*(max(dataSet(:,j))-min(dataSet(:,j)))+min(dataSet(:,j));
     end
     
+    for i = 1:numClusters
+        j = ceil(rand*dataLength);
+        while sum(ismember(avgPoints,dataSet(j,:),'rows')) ~= 0
+            j = ceil(rand*dataLength);
+        end
+        avgPoints(i,:) = dataSet(j,:);
+    end
+    
     for iter = 1:numIterations
-        disp(strcat('Iteration:',{' '},string(iter)));
+%         disp(strcat('Iteration:',{' '},string(iter)));
         dataSetAssignments = [dataSet ones(dataLength,1)];
         for i = 1:size(dataSetAssignments,1)
            minDist = norm(dataSetAssignments(i,1:dataDim).' - avgPoints(1,:).');
